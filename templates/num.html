@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block contant %} 
+
+<h1>Number Storage</h1>
+<form method="POST">
+    {{ form.hidden_tag() }}
+    {{ form.csrf_token }}
+    {{ form.value.label }} {{ form.value() }}
+    <button type="submit">Save Number</button>
+</form>
+<h2>Numbers:</h2>
+<ul>
+    {% for number in numbers %}
+        <li>{{ number.value }}</li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block contant %} 
+<h1>Sign Up</h1>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li  {{ message[1] }}">{{ message[0] }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+    <form method="post" action="{{ url_for('signup') }}">
+        {{ form.hidden_tag() }}
+    <div class="col-6">
+
+        <label for="username">Username:</label>
+        {{ form.username (class="form-control", id=form.username.id) }}
+        <label for="rcno">RCNo:</label>
+        {{ form.rcno (class="form-control", id=form.rcno.id)}}
+        <label for="email">Email:</label>
+        {{ form.email (class="form-control", id=form.email.id) }}
+        <label for="password">Password:</label>
+        {{ form.password (class="form-control", id=form.password.id) }}
+    </br>
+        {{ form.submit (class="btn btn-primary mb-3", id=form.submit.id) }}
+    </div>
+    </form>
+
+{% endblock %}

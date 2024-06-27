@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block contant %} 
+
+<h4 class="text-decoration-underline">Current Shift</h4>
+<form method="POST" action="{{ url_for('shift') }}" >
+    <div class="container">
+        
+            {{ form.hidden_tag() }}
+            {% for item in data %}
+            <div class="col-md-2">
+                <label for todayDate1 class="col-sm-1 col-form-label d-none" required></label>
+                <div>
+                    <input type="date" id="todayDate1" name="todayDate1"  disabled selected  class="form-control border-0 bg-transparent form-control-sm" value="{{ item.Shift_Date }}" disabled selected readonly>
+                </div>
+            </div>     
+            <div class="col-md-2">
+                <label for shift class="col-sm-1 col-form-label" required>Shift:</label>
+                <div>
+                    
+                    <input type="text" id="shift1" name="shift1" disabled selected  class="form-control border-0 bg-transparent form-control-sm" value="{{ item.Shift_Name }}">
+                    <input type="text" id="id" name="OpenshiftStatus" disabled selected  class="form-control border-0 bg-transparent form-control-sm" value="{{ item.Shift_Status }}">
+                </div>
+            </div> 
+            
+
+            <div class="col-md-2">
+                <label for todayDate class="col-sm-1 col-form-label" required></label>
+                <div>
+                    <input type="date" id="todayDate" name="todayDate"  class="form-control form-control-sm d-none">
+                    
+                </div>
+            </div>
+                 
+            <div class="col-md-2">
+                <label for shift class="col-sm-1 col-form-label d-none" required>Status:</label>
+                <div>
+                     
+                    <input type="text" id="Status" name="Status" disabled selected class="form-control form-control-sm d-none" value="Close">
+                    
+                </div>
+            </div> 
+        </div>
+    
+            <div class="col-md-1">
+                <label for Others class="col-sm-1 col-form-label d-none" required></label>
+                <div>
+                    
+                    <a href="{{ url_for('shiftchange', item_id=item.id) }}" button class="btn btn-outline-danger button-spacing" type="submit" >Close</a></li>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+
+       
+
+        <hr class="my-4 bold-line">
+        
+    <div class="container">
+        <h4 class="text-decoration-underline">Closed Shift</h4>
+        
+            {% for item in data1 %}
+            <div class="col-md-2">
+                <label for todayDate1 class="col-sm-1 col-form-label d-none" required>Date:</label>
+                <div>
+                    <input type="date" id="todayDate1" name="todayDate1" disabled selected class="form-control form-control-sm  d-none" value="{{ item.Shift_Date }}">
+                </div>
+            </div>     
+            <div class="col-md-10">
+                <label for shift class="col-sm-1 col-form-label" required></label>
+                <div>
+                    <input type="text" id="shift1" name="shift1" disabled selected  class="form-control border-0 bg-transparent form-control-sm" value="{{ item.Shift_Name }}">
+                    <input type="text" id="shiftStatus1" name="shiftStatus" disabled selected  class="form-control border-0 bg-transparent form-control-sm" value="{{ item.Shift_Status}}">
+                    <input type="date" id="shiftDate1" name="shiftDate" disabled selected  class="form-control border-0 bg-transparent form-control-sm" value="{{ item.Shift_Date }}">
+                    
+                </div>
+            </div> 
+            <div class="col-md-2">
+                <label for shift class="col-sm-1 col-form-label" required></label>
+                <div>
+            <a href="{{ url_for('shiftchange', item_id=item.id) }}" button class="btn btn-outline-danger button-spacing" id="myButton" name="myButton" type="submit" onclick="return checkConditions()"  >Open</a></li>
+            {% endfor %}
+            <div>
+           
+            </div>
+            <hr class="my-4 bold-line">
+        
+    </div>
+</form>
+
+<script>
+    // Set today's date as the default value
+    document.getElementById('todayDate').valueAsDate = new Date();
+    
+</script>
+
+
+
+{% endblock %}

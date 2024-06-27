@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="{{url_for('static', filename = 'css/bootstrap.min.css')}}" rel="stylesheet"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="{{ url_for('static', filename='js/jquery-3.2.1.min.js') }}"></script>
+  
+    <!-- You can add additional meta tags, link to stylesheets, or include scripts in the head section -->
+</head>
+
+<body>
+    {% include 'navbar.html' %}    
+</br>
+<div class="container">
+    {% block contant %} {% endblock %}
+</div>    
+    <script type="text/javascript" src="{{url_for('static', filename = 'js/jquery-3.2.1.min.js')}}"></script>
+    <script type="text/javascript" src="{{url_for('static', filename = 'js/bootstrap.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/jquery-3.2.1.min.js') }}"></script>
+</body>
+<html>

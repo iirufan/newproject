@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Draw System</title>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f0f0f0; /* Light attractive color */
+      overflow: hidden;
+    }
+    .winner {
+      font-weight: bold;
+      font-size: 5em;
+      color: red;
+    }
+    .flash {
+      animation: flash 05s ease-in-out;
+    }
+    @keyframes flash {
+      0%, 100% { color: red; }
+      50% { color: gold; }
+    }
+    .bold-color {
+      font-weight: bold;
+      color: initial; /* Initial color for input names */
+    }
+    #particles-js {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="container mt-5">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="input-group mb-3">
+          <input type="text" id="nameInput" class="form-control" placeholder="Enter a name">
+          <div class="input-group-append">
+            <button class="btn btn-primary" onclick="addName()">Add Name</button>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <button class="btn btn-success btn-lg btn-block" onclick="selectWinner()">Select Winner</button>
+        <button class="btn btn-danger btn-lg btn-block" onclick="resetDraw()">Reset</button>
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="col">
+        <div id="winnerDisplay"></div>
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="col">
+        <ul id="nameList" class="list-group">
+          <!-- Names will be added here dynamically -->
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div id="particles-js"></div>
+
+  <script>
+    let names = [];
+
+    function addName() {
+      const nameInput = document.getElementById('nameInput');
+      const name = nameInput.value.trim();
+      if (name !== '') {
+        names.push(name);
+        renderNames();
+        nameInput.value = '';
+      }
+    }
+
+    function renderNames() {
+      const nameList = document.getElementById('nameList');
+      nameList.innerHTML = '';
+      names.forEach((name, index) => {
+        const li = document.createElement('li');
+        li.className = 'list-group-item bold-color';
+        li.textContent = name;
+        li.style.color = getRandomColor();
+        nameList.appendChild(li);
+      });
+    }
+
+    function getRandomColor() {
+      const letters = '0123456789ABCDEF';
+      let color = '#';
+      for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
+    }
+
+    function selectWinner() {
+      if (names.length > 0) {
+        const rollDelay = 1000; // milliseconds (slower animation)
+        const rolls = 20; // number of rolls
+        const nameListItems = document.querySelectorAll('#nameList li');
+        const totalItems = nameListItems.length;
+
+        // Function to randomly select a winner
+        function selectWinnerAfterRolls() {
+          const winnerIndex = Math.floor(Math.random() * names.length);
+          const winnerName = names[winnerIndex];
+
+          // Highlight the winner with flashing colors
+          const winnerDisplay = document.getElementById('winnerDisplay');
+          winnerDisplay.innerHTML = `<p class="winner flash">The winner is: <span class="flash">${winnerName}</span></p>`;
+
+          // Remove winner's name from the list
+          names.splice(winnerIndex, 1);
+          renderNames();
+
+          // Trigger firework animation
+          fireworkAnimation();
+        }
+
+        // Function to perform a single roll animation
+        function rollAnimation() {
+          nameListItems.forEach(item => {
+            const randomIndex = Math.floor(Math.random() * totalItems);
+            const targetItem = nameListItems[randomIndex];
+            nameList.insertBefore(item, targetItem.nextSibling);
+          });
+        }
+
+        // Perform multiple rolls to create a rolling animation effect
+        let rollCount = 0;
+        const rollInterval = setInterval(() => {
+          rollAnimation();
+          rollCount++;
+          if (rollCount === rolls) {
+            clearInterval(rollInterval);
+            selectWinnerAfterRolls();
+          }
+        }, rollDelay);
+      } else {
+        alert('Please add names before selecting a winner.');
+      }
+    }
+
+    function resetDraw() {
+      names = [];
+      renderNames(); // Clear the list
+      const nameListItems = document.querySelectorAll('#nameList li');
+      nameListItems.forEach(item => {
+        item.style.fontWeight = 'normal';
+        item.style.color = 'initial';
+        item.style.fontSize = 'initial';
+      });
+
+      // Clear winner display
+      const winnerDisplay = document.getElementById('winnerDisplay');
+      winnerDisplay.innerHTML = '';
+    }
+
+    function fireworkAnimation() {
+      particlesJS('particles-js', {
+        particles: {
+          number: {
+            value: 80,
+            density: {
+              enable: true,
+              value_area: 800
+            }
+          },
+          color: {
+            value: '#ff00ff'
+          },
+          shape: {
+            type: 'circle',
+            stroke: {
+              width: 0,
+              color: '#00ff00'
+            },
+            polygon: {
+              nb_sides: 5
+            }
+          },
+          opacity: {
+            value: 0.5,
+            random: false,
+            anim: {
+              enable: false,
+              speed: 1,
+              opacity_min: 0.1,
+              sync: false
+            }
+          },
+          size: {
+            value: 5,
+            random: true,
+            anim: {
+              enable: false,
+              speed: 40,
+              size_min: 0.1,
+              sync: false
+            }
+          },
+          line_linked: {
+            enable: true,
+            distance: 150,
+            color: '#ff00ff',
+            opacity: 0.4,
+            width: 1
+          },
+          move: {
+            enable: true,
+            speed: 6,
+            direction: 'none',
+            random: false,
+            straight: false,
+            out_mode: 'out',
+            bounce: false,
+            attract: {
+              enable: false,
+              rotateX: 600,
+              rotateY: 1200
+            }
+          }
+        },
+        interactivity: {
+          detect_on: 'canvas',
+          events: {
+            onhover: {
+              enable: false,
+              mode: 'repulse'
+            },
+            onclick: {
+              enable: false,
+              mode: 'push'
+            },
+            resize: true
+          },
+          modes: {
+            grab: {
+              distance: 400,
+              line_linked: {
+                opacity: 1
+              }
+            },
+            bubble: {
+              distance: 400,
+              size: 40,
+              duration: 2,
+              opacity: 8,
+              speed: 3
+            },
+            repulse: {
+              distance: 200,
+              duration: 0.4
+            },
+            push: {
+              particles_nb: 4
+            },
+            remove: {
+              particles_nb: 2
+            }
+          }
+        },
+        retina_detect: true
+      });
+    }
+  </script>
+
+  <!-- particles.js library -->
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+  <!-- jQuery and Bootstrap Bundle (includes Popper) -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

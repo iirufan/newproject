@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block contant %} 
+
+<h1>Update Shift Status</h1>
+    <form >
+        <div class="col-auto">
+            <label for shift  class="col-form-label">Shift:</label>
+            
+            <input type="text" id="Shift_Status" name="Shift_Status" class="form-control form-control-sm" >
+           
+        </div>
+        <a href="{{ url_for('shift', item_id='3') }}" button class="btn btn-outline-danger button-spacing" type="submit" >Accept</a></li>
+        <button type="submit">Update Shift Status for Shift1</button>
+    </form>
+
+
+{% endblock %}

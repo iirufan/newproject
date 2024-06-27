@@ -1,0 +1,78 @@
+{% extends 'base.html'%}
+
+{% block contant %}
+
+<h1>Shift Mangement</h1>
+<form method="POST" action="" onsubmit="return validateForm()">
+    {{ form.hidden_tag() }}
+    <p><p>
+    <label for="todayDate" class="col-sm-1 col-form-label">Today:</label>   
+    <input type="date" id="todayDate" name="todayDate" class="form-control form-control-sm">
+    <br>
+    <label for="ShiftStatus" class="col-sm-1 col-form-label">Shift Status:</label>  
+    <input type="text" id="Shift_Status" name="Shift_Status" class="form-control form-control-sm" value="{{ item.Shift_Status }}">
+    <br>
+    <label for="Shift_Status1" class="col-sm-1 col-form-label">Shift Status1:</label>  
+    <input type="text" id="Shift_Status1" name="Shift_Status1" class="form-control form-control-sm">
+    <label for="shiftDate1" class="col-sm-1 col-form-label">ShiftDate:</label>  
+    <input type="date" id="shiftDate1" name="shiftDate" class="form-control form-control-sm" value="{{ item.Shift_Date }}">
+    <input type="text" id="shiftName" name="shiftName" class="form-control form-control-sm" value="{{ item.Shift_Name }}">
+    <button type="submit" class="btn btn-primary mb-3" id="myButton">Accept</button>  
+    <hr class="my-4 bold-line">
+    <p>Shift1 Data</p> 
+    {% for item in dataforshift1 %}
+    <input type="date" id="shift1openDate" name="shiftDate" class="form-control form-control-sm" value="{{ item.Shift_Date }}">
+    <input type="text" id="shiftName1" name="shiftName" class="form-control form-control-sm" value="{{ item.Shift_Name }}">
+    {% endfor %}
+    <hr class="my-4 bold-line">
+    <p>Shift Open Status</p> 
+    {% for item in dataforopenshift %}
+    <input type="text" id="shiftOpen1" name="shiftOpen" class="form-control form-control-sm" value="{{ item.Shift_Status }}">
+    {% endfor %}
+</form>
+<script>    
+    // Set today's date as the default value
+    document.getElementById('todayDate').valueAsDate = new Date();
+
+    // Get the value of Shift_Status
+    var shiftStatusValue = document.getElementById("Shift_Status").value;
+
+    var shiftStatus1Element = document.getElementById("Shift_Status1");
+    var buttonLabelElement = document.getElementById("myButton");
+
+    // Set the text content of the button label and Shift_Status1 based on the value of Shift_Status
+    buttonLabelElement.textContent = (shiftStatusValue === "Open") ? "Close" : "Open";
+    shiftStatus1Element.value = (shiftStatusValue === "Open") ? "Close" : "Open";
+
+    function validateForm() {
+        var todayDate = new Date().toISOString().split('T')[0];
+        var shiftStatus = document.getElementById('Shift_Status').value;
+        var shiftStatus1 = document.getElementById('Shift_Status1').value;
+        var shiftDate1 = document.getElementById('shiftDate1').value;
+        var shiftName = document.getElementById('shiftName').value;
+        var shiftName1 = document.getElementById('shiftName1').value;
+        var shiftOpen1 = document.getElementById('shiftOpen1').value;
+        var shift1openDate = document.getElementById('shift1openDate').value;
+
+        // Check if shiftDate1 is todayDate and Shift_Status is Close
+        if (shiftDate1 === todayDate && shiftStatus === 'Close') {
+            alert('This shift is already closed for today.');
+            return false;
+        }
+
+        // Check if shiftDate1 is todayDate and shiftName is not equal to shiftName1
+        if (shiftDate1 !== todayDate ) {
+            alert('Shift1 is not open yet.');
+            return false;
+        }
+
+        if (shiftOpen1 === 'Open' && shiftStatus1 === 'Open' ) {
+            alert('A shift is already open. you need to close the shift to open a new shift');
+            window.location.href = '/shift';
+            return false;
+        }
+
+        return true; // Form submission will proceed
+    }
+</script>
+{% endblock %}

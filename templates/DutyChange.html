@@ -1,0 +1,184 @@
+{% extends 'base.html' %}
+
+{% block contant %} 
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class="flashes">
+      {% for message in messages %}
+        <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+
+
+
+
+
+
+<form method="POST" action="{{ url_for('DutyChange') }}" id="myForm">
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-6">
+                <h4 class="text-decoration-underline">Requesting Staff</h4>
+                    {{ form.hidden_tag() }}
+                <div class="mb-1 row">
+                    <label for Change_Date class="col-sm-1 col-form-label" required>Change_Date:</label>
+                    <div>
+                        <input type="date" id="Change_Date" name="Change_Date" class="form-control">
+                    </div>
+                </div>     
+                <div class="mb-1 row">
+                    <label for Username class="col-sm-1 col-form-label" >Name:</label>
+                    <div>
+                        <input type="text" id="Username" name="Username" disabled selected class="form-control" value="{{ current_user.username }}" readonly>
+                        </Select>
+                    </div>
+                </div>      
+
+                <div class="mb-1 row">
+                    <label for RcNo class="col-sm-1 col-form-label">RCNo:</label>
+                    <div>
+                        <input type="text" id="RCNo" name="RCNo" disabled selected class="form-control" Value="{{ current_user.rcno }}" readonly>
+                    </div>    
+                </div> 
+                
+
+                <div class="mb-1 row">
+                    
+                    <div class="col-md-3 mb-1">
+                        <input type="text" id="email" name="email" disabled selected class="form-control d-none" Value="{{ current_user.email }}"readonly>
+                    </div>    
+                </div>  
+
+                <div class="mb-1 row">
+                    <label for Duty_time_From class="col-sm-1 col-form-label">DutyTime:</label>
+                    <div >
+                        <input type="time" id="Duty_time_From" name="Duty_time_From" class="form-control" >
+                    </div>    
+                </div> 
+
+                <div class="mb-1 row">
+                    
+                    <div class="col-md-3 mb-1">
+                    <input type="text" id="OTP_From" class="form-control d-none" name="OTP_From" value="{{ generated_otp }}" readonly >
+                    </div>
+                </div>
+            </div>    
+            <div class="col-md-6">  
+                <h4 class="text-decoration-underline">Accepting Staff</h4>  
+                <div class="mb-1 row">
+                    <label for Username_To class="col-sm-1 col-form-label">Name:</label>
+                    <div >
+                        <select id="Username_To" name="Username_To"   class="form-control" onchange="updateFields()">
+                            
+                        </select>
+                    </div>    
+                </div> 
+
+                <div class="mb-1 row">
+                    <label for RCNo_To class="col-sm-1 col-form-label">RCNo:</label>
+                    <div >
+                        <input type="text" id="RCNo_To" name="RCNo_To" disabled selected class="form-control" readonly >
+                    </div>    
+                </div> 
+
+                <div class="mb-1 row">
+                    <label for email_To class="col-sm-1 col-form-label">email:</label>
+                    <div>
+                        <input type="text" id="email_To" name="email_To" disabled selected class="form-control" readonly >
+                    </div>    
+                </div> 
+
+                <div class="mb-1 row">
+                    <label for Duty_time_To class="col-sm-1 col-form-label">Dutytime:</label>
+                    <div>
+                        <input type="time" id="Duty_time_To" name="Duty_time_To" class="form-control" >
+                    </div>    
+                </div> 
+
+                <div class="mb-1 row">
+                    
+                    <div>
+                        <input type="text" id="D_Status" name="D_Status" class="form-control d-none" value="requested">
+                    </div>    
+                </div> 
+
+            </div>     
+                </br>
+                    <button type="submit" class="btn btn-primary mb-3">Submit</button>
+                </div> 
+            
+        </div>
+    </div>
+</form>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Fetch usernames from the server and populate the dropdown
+    fetch("/get_usernames")
+        .then(response => response.json())
+        .then(data => {
+            var usernameDropdown = document.getElementById("Username_To");
+
+            // Clear existing options (if needed)
+            // usernameDropdown.innerHTML = "";
+
+            // Add the default option with an empty value
+            var defaultOption = document.createElement("option");
+            defaultOption.value = "";
+            defaultOption.text = "Select One"; // or any label you prefer
+            usernameDropdown.add(defaultOption);
+
+            // Add new options
+            data.usernames.forEach(function(username) {
+                var option = document.createElement("option");
+              
+                option.value = username;
+                option.text = username;
+
+                // Append options to the dropdown
+                usernameDropdown.add(option);
+            });
+        })
+        .catch(error => console.error('Error:', error));
+});
+
+function updateFields() {
+            var selectedUsernameTo = document.getElementById("Username_To").value;
+
+            fetch(`/get_user_data/${selectedUsernameTo}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("email_To").value = data.email || '';
+                    document.getElementById("RCNo_To").value = data.rcno || '';
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    // Set email_To and RCNo_To to null or empty in case of an error or no match
+                    document.getElementById("email_To").value = '';
+                    document.getElementById("RCNo_To").value = '';
+                });
+                
+        }
+
+function validateForm() {
+var Change_Date = document.getElementById("Change_Date").value;
+var email = document.getElementById("email").value;
+var rcno = document.getElementById("rcno").value;
+
+// Custom validation logic (add more conditions as needed)
+if (Change_Date === "") {
+    alert("Please select a Date.");
+    return false;
+}
+
+
+
+// If all validations pass, the form will be submitted
+return true;
+}
+        
+</script>
+{% endblock %}

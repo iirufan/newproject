@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+
+{% block contant %} 
+
+<h5>Payment Form</h5>
+
+<form method="POST" action="{{ url_for('payment') }}" id="myForm" class="row g-3 align-items-center">
+
+    {{ form.hidden_tag() }}
+    <div class="col-auto">
+        <label for todayDate  class="col-form-label">Date:</label>
+        <input type="date" id="todayDate" name="todayDate" class="form-control form-control-sm" readonly>  
+    </div>
+    <div class="col-auto">
+        <label for shift  class="col-form-label">Shift:</label>
+        {% for shift_name in open_shift_names %}
+        <input type="text" id="shift" name="shift" class="form-control form-control-sm" value="{{ shift_name[0]  }}" readonly>
+        {% endfor %} 
+    </div>
+   
+
+    <div class="col-auto">
+            <button type="submit" class="btn btn-primary mt-4">Save</button>
+    </div> 
+
+    <hr class="my-4 bold-line">
+    <div class="container">
+        <div class="row">
+
+            <div class="col">
+                <div class="mb-1 row">
+                    <label for="code" class="col-sm-2 col-form-label">Code:</label>
+                    <div class="col-sm-10">
+                    <input type="password" id="code" name="code" class="form-control form-control-sm">
+                    <input type="text" id="code1" name="code1" class="form-control form-control-sm d-none">
+                    <input type="text" id="code2" name="code2" class="form-control form-control-sm d-none">
+                    </div>
+                </div>
+
+                <div class="mb-1 row">
+                    <label for="paxName" class="col-sm-2 col-form-label">Name:</label>
+                    <div class="col-sm-10">
+                    <input type="text" id="paxName" name="paxName" class="form-control form-control-sm">
+                    </div>
+                </div>
+
+                <div class="mb-1 row">
+                    <label for="airlineName" class="col-sm-2 col-form-label">Airline:</label>
+                    <div class="col-sm-10">
+                        <input type="text" id="airlineName" name="airlineName" class="form-control form-control-sm">
+                        <input type="text" id="airlineName1" name="airlineName1" class="form-control form-control-sm d-none">
+                        <input type="text" id="airlineName2" name="airlineName2" class="form-control form-control-sm d-none">
+                    </div>
+                </div>
+
+                <div class="mb-1 row">
+                    <label for="flightNumber" class="col-sm-2 col-form-label">FlightNo:</label>
+                    <div class="col-sm-10">
+                    <input type="text" id="flightNumber" name="flightNumber" class="form-control form-control-sm">
+                    </div>
+                </div>
+
+                <div class="mb-1 row">
+                    <label for="seatNumber" class="col-sm-2 col-form-label">Seat:</label>
+                    <div class="col-sm-10">
+                        <input type="text" id="seatNumber" name="seatNumber" class="form-control form-control-sm">
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col">
+
+                <div class="mb-1 row">
+                    <label for="adultPax" class="col-sm-3 col-form-label">Adult:</label>
+                    <div class="col-sm-4">
+                    <input type="number" id="adultPax" name="adultPax" class="form-control form-control-sm">
+                    </div>
+                </div>
+
+                <div class="mb-1 row">
+                    <label for="kidPax" class="col-sm-3 col-form-label">Kid:</label>
+                    <div class="col-sm-4">
+                    <input type="number" id="kidPax" name="kidPax" class="form-control form-control-sm">
+                    </div>
+                </div>
+
+                <div class="mb-1 row">
+                    <label for="paymentType" class="col-sm-3 col-form-label">PaymentType:</label>
+                    <div class="col-sm-4">
+                    <select type="text" id="paymentType" name="paymentType" class="form-control form-control-sm">
+                        <option value="CASH">Cash</option>
+                        <option value="CARD">Card</option>
+                        <option value="VISA">Visa</option>
+                        <option value="MASTER">Master</option>
+                        <option value="AMEX">Amex</option>
+                        <option value="UNION PAY">UnionPay</option>
+                        <option value="MOBILE-PAY">MobilePay</option>
+                    </select>
+                    </div>
+                </div>
+
+                <div class="mb-1 row">
+                    <label for="currencyType" class="col-sm-3 col-form-label">Currency:</label>
+                    <div class="col-sm-4">
+                    <select type="text" id="currencyType" name="currencyType" class="form-control form-control-sm">
+                        <option value="USD">USD</option>
+                        <option value="MVR">MVR</option>
+                    </select>
+                    </div>
+                </div>
+
+                <div class="mb-1 row">
+                    <label for="totalAmount" class="col-sm-3 col-form-label">TotalAmount:</label>
+                    <div class="col-sm-4">
+                    <input type="number" step="0.01" id="totalAmount" name="totalAmount" class="form-control form-control-sm" readonly>
+                    </div>
+                </div>
+
+                <div class="mb-1 row">
+                    <label for="givenAmount" class="col-sm-3 col-form-label">Given Amount:</label>
+                    <div class="col-sm-4">
+                        <input type="number" step="0.01" id="givenAmount" name="givenAmount" class="form-control form-control-sm" placeholder="Given Amount">
+                    </div>
+                </div>
+
+                <div class="mb-1 row">
+                    <label for="balanceAmount" class="col-sm-3 col-form-label">Balance:</label>
+                    <div class="col-sm-4">
+                        <input type="number" step="0.01" id="balanceAmount" name="balanceAmount" class="form-control form-control-sm" placeholder="Balance" readonly>
+                    </div>
+                    </div>
+                </div>
+        
+                <div class="mb-1 row">
+                    <label for adultAmount class="col-sm-1 col-form-label d-none" required>AdultAmount:</label>
+                    <div>
+                        <input type="number" step="0.01" id="adultAmount" name="adultAmount" class="form-control form-control-sm">
+                    </div>
+                </div>
+                <div class="mb-1 row">
+                    <label for kidAmount class="col-sm-1 col-form-label d-none" required>KidAmounut:</label>
+                    <div>
+                        <input type="number" step="0.01" id="kidAmount" name="kidAmount" class="form-control form-control-sm d-none">
+                    </div>
+                </div>
+                <div class="mb-1 row">
+                    <label for adultGST class="col-sm-1 col-form-label d-none" required>AdultGST:</label>
+                    <div>
+                        <input type="number" step="0.01" id="adultGST" name="adultGST" class="form-control form-control-sm d-none">
+                    </div>
+                </div>
+                <div class="mb-1 row">
+                    <label for kidGST class="col-sm-1 col-form-label d-none" required>KidGST:</label>
+                    <div>
+                        <input type="number" step="0.01" id="kidGST" name="kidGST" class="form-control form-control-sm d-none">
+                    </div>
+                </div>
+                
+                {% for item in data %}
+                
+                <div class="mb-1 row">
+                    <label for kidGST class="col-sm-1 col-form-label d-none" required>Rates:</label>
+                    <div>
+                        <input type="number" step="0.01" id="kidrate" name="Kidrate" class="form-control form-control-sm d-none"value="{{ item.KidRateUSD }}">
+                        <input type="number" step="0.01" id="adultrate" name="adultrate" class="form-control form-control-sm d-none"value="{{ item.adultRateUSD }}">
+                        <input type="number" step="0.01" id="adultrateMVR" name="adultrateMVR" class="form-control form-control-sm d-none"value="{{ item.adultRateMVR }}">
+                        <input type="number" step="0.01" id="kidrateMVR" name="KidrateMVR" class="form-control form-control-sm d-none"value="{{ item.KidRateMVR }}">
+                        <input type="number" step="0.01" id="GSTRate1" name="GSTRate1" class="form-control form-control-sm d-none"value="{{ item.GSTRate }}">
+                    </div>
+                </div>
+                {% endfor %}
+
+                
+
+                </div>
+            </div>  
+              
+        </div>
+    </div>
+    
+</form>
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+     
+{% endblock %}

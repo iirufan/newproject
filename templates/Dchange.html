@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+
+{% block contant %} 
+
+<form method="POST" onsubmit="return validateForm()" action="{{ url_for('changeduty') }}">
+    {{ form.hidden_tag() }}
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-6">
+    
+                <div class="form-group">
+                    {{ form.Change_Date.label(class="form-control-label") }}
+                    {{ form.Change_Date(class="form-control", id="todayDate",) }}
+                </div>
+                
+                <div class="form-group">
+                    {{ form.Username.label(class="form-control-label") }}
+                    {{ form.Username(class="form-control", id="Username", value= current_user.username) }}
+                </div>
+                
+                <div class="form-group">
+                    {{ form.RCNo.label(class="form-control-label") }}
+                    {{ form.RCNo(class="form-control", id="RCNo", value= current_user.rcno , readonly="readonly") }}
+                </div>
+                
+                <div class="form-group d-none">
+                    {{ form.email.label(class="form-control-label") }}
+                    {{ form.email(class="form-control", id="email", value= current_user.email , readonly="readonly") }}
+                </div>
+                
+                <div class="form-group">
+                    {{ form.Duty_time_From.label(class="form-control-label") }}
+                    {{ form.Duty_time_From(class="form-control") }}
+                </div>
+            </div>    
+        <div class="col-md-6">      
+                <div class="form-group">
+                    {{ form.Username_To.label(class="form-control-label") }}
+                    {{ form.Username_To(class="form-control", id="Username_To", onchange="updateFields()") }}
+                </div>
+                
+                <div class="form-group">
+                    {{ form.RCNo_To.label(class="form-control-label") }}
+                    {{ form.RCNo_To(class="form-control", id="RCNo_To") }}
+                </div>
+                
+                <div class="form-group">
+                    {{ form.email_To.label(class="form-control-label") }}
+                    {{ form.email_To(class="form-control", id="email_To") }}
+                </div>
+                
+                <div class="form-group">
+                    {{ form.Duty_time_To.label(class="form-control-label") }}
+                    {{ form.Duty_time_To(class="form-control") }}
+                </div>
+                
+                <div class="form-group d-none">
+                    {{ form.D_Status.label(class="form-control-label") }}
+                    {{ form.D_Status(class="form-control",value= 'requested') }}
+                </div>
+        </div>
+        </div>
+    </div>
+    
+                <div>
+                </br>
+                <button type="submit" class="btn btn-primary mb-3">Save</button>
+            </div>
+</form>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    // Fetch usernames from the server and populate the dropdown
+    fetch("/get_usernames")
+        .then(response => response.json())
+        .then(data => {
+            var usernameDropdown = document.getElementById("Username_To");
+                    
+            var defaultOption = document.createElement("option");
+            defaultOption.value = "";
+            defaultOption.text = "Select One"; // or any label you prefer
+            usernameDropdown.add(defaultOption);
+
+            // Add new options
+            data.usernames.forEach(username=> {
+                var option = document.createElement("option");
+                option.value = username;
+                option.text = username;
+                // Append options to the dropdown
+                usernameDropdown.add(option);
+            });
+        })
+        .catch(error => console.error('Error:', error));
+});
+
+function updateFields() {
+            var selectedUsernameTo = document.getElementById("Username_To").value;
+
+            fetch(`/get_user_data/${selectedUsernameTo}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("email_To").value = data.email || '';
+                    document.getElementById("RCNo_To").value = data.rcno || '';
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    // Set email_To and RCNo_To to null or empty in case of an error or no match
+                    document.getElementById("email_To").value = '';
+                    document.getElementById("RCNo_To").value = '';
+                });
+                
+        }
+
+function validateForm() {
+var Change_Date = document.getElementById("Change_Date").value;
+var email = document.getElementById("email").value;
+var rcno = document.getElementById("rcno").value;
+
+// Custom validation logic (add more conditions as needed)
+if (Change_Date === "") {
+    alert("Please select a Date.");
+    return false;
+}
+
+
+
+// If all validations pass, the form will be submitted
+return true;
+}
+       
+document.getElementById('todayDate').valueAsDate = new Date();
+</script>
+
+{% endblock %}

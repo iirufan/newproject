@@ -1,0 +1,28 @@
+{% extends 'base.html'%}
+
+{% block contant %}
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class="flashes">
+      {% for message in messages %}
+        <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+<h1>Duty Change Accept</h1>
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        <p>I acknowledge and accept the duty change request from {{ form.RCNo_From.data }}<p>
+        <input type="text" id="RCNo_From" name="RCNo_From" class="form-control d-none" value="{{ form.RCNo_From.data }}">
+        <br>
+        
+        <input type="text" id="D_Status" name="D_Status" class="form-control d-none" value="Accept">
+        <br>
+
+        <button type="submit" class="btn btn-primary mb-3">Accept</button>    
+        
+    </form>
+
+
+{% endblock %}
